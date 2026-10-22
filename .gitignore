@@ -36,3 +36,4 @@ dist/
 .DS_Store
 Thumbs.db
 .idea/
+venv/
