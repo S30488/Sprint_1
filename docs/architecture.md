@@ -46,7 +46,7 @@ albo jako obraz w `docs/` z linkiem w tej sekcji. Usuńcie znaczniki TODO, gdy d
 gotowy — sprawdza to `python scripts/check_dod.py`.
 
 <!-- DIAGRAM-V0:START -->
-````markdown
+
 ```mermaid
 flowchart TD
     subgraph S1["Sprint 1 - gotowe"]
@@ -73,10 +73,10 @@ flowchart TD
         CR -.-> UI
     end
     F -.-> H
-
-    ```markdown
-Dane pobieramy skryptem z UCI i trzymamy poza Gitem. Przy treningu przechodzą przez normalize_input(), filter_training_rows() (tylko trening) i split, a preprocessing jest w sklearn Pipeline razem z modelem. Po Sprincie 1 działa tylko część treningowa i powstaje metrics.json. Docelowo użytkownik wysyła dane klienta przez UI do API, które używa tej samej normalize_input(), zwraca prawdopodobieństwo churnu i zapisuje predykcję w bazie. API i UI będą wdrożone w Cloud Run.
 ```
+
+Dane pobieramy skryptem z UCI i trzymamy poza Gitem. Przy treningu przechodzą przez normalize_input(), filter_training_rows() (tylko trening) i split, a preprocessing jest w sklearn Pipeline razem z modelem. Po Sprincie 1 działa tylko część treningowa i powstaje metrics.json. Docelowo użytkownik wysyła dane klienta przez UI do API, które używa tej samej normalize_input(), zwraca prawdopodobieństwo churnu i zapisuje predykcję w bazie. API i UI będą wdrożone w Cloud Run.
+
 <!-- DIAGRAM-V0:END -->
 
 ## Historia zmian architektury
