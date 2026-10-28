@@ -12,31 +12,41 @@ powiązane, ale nie zawierają gotowych rozwiązań ani zadań do wykonania wcze
 (szczegóły: sekcja „Architektura i scaffold S1–S6”).
 
 <!-- KARTA-PROJEKTU:START -->
+
 ## Karta projektu (wypełnia zespół w Sprincie 1)
 
-| Pole | Wartość |
-|---|---|
-| Zespół i integrator Sprintu 1 | TODO |
-| Dataset (id z `docs/datasets.md`) | TODO |
-| Źródło, licencja i cytowanie (DOI) | TODO |
-| Data pobrania danych | TODO |
-| SHA-256 pliku danych (`fingerprint.json`) | TODO |
-| Dane osobowe w zbiorze i sposób postępowania | TODO |
-| Target i klasa pozytywna | TODO |
-| Metryka główna i uzasadnienie | TODO |
-| Użytkownik systemu i decyzja, którą wspiera model | TODO |
+| Pole                               | Wartość                                                                                      |
+| ---------------------------------- | -------------------------------------------------------------------------------------------- |
+| Zespół i integrator Sprintu 1      | Zespół: [Robert Juchimiuk, Mikołaj Dąbski, Jakub Okurowski] Integrator S1: [Jakub Okurowski] |
+| Dataset (id z `docs/datasets.md`)  | iranian_churn                                                                                |
+| Źródło, licencja i cytowanie (DOI) | Źródło: UCI Machine Learning Repository (Iranian Churn Dataset)                              |
+
+Licencja: CC BY 4.0
+
+Cytowanie: Zgodnie z informacją w pliku docs/datasets.md dla tego zbioru. |
+| Data pobrania danych | 28-10-2026 |
+| SHA-256 pliku danych (`fingerprint.json`) | 90d5fb6bd1630cd4de4b4d28fcf8b4cb92a8f6ab7484605b0799d47386f7dbe1 |
+| Dane osobowe w zbiorze i sposób postępowania | Zbiór zawiera zanonimizowane dane telekomunikacyjne i wskaźniki behawioralne klientów (brak bezpośrednich danych osobowych typu imię, nazwisko czy adres). Zbiór jest używany wyłącznie w celach edukacyjnych/badawczych. |
+| Target i klasa pozytywna | Target: Churn
+
+Klasa pozytywna: 1 (klient, który zrezygnował z usług / odejście operatora) |
+| Metryka główna i uzasadnienie | Metryka główna: F1-score (oraz Precision/Recall)
+
+Uzasadnienie: Zbiór jest silnie niezbalansowany (klienci odchodzący stanowią mniejszość). Accuracy mogłoby dawać złudnie wysoki wynik przy przewidywaniu samej klasy większościowej, dlatego kluczowa jest równowaga między precyzją a czułością za pomocą F1-score. |
+| Użytkownik systemu i decyzja, którą wspiera model | Użytkownik: Dział retencji i obsługi klienta operatora telekomunikacyjnego.Decyzja: Identyfikacja klientów zagrożonych odejściem (churn) w celu skierowania do nich spersonalizowanych oferty retencyjnych lub rabatów zapobiegających rezygnacji z umowy. |
+
 <!-- KARTA-PROJEKTU:END -->
 
 ## Mapa projektu
 
-| Sprint | Daty | Warstwa systemu | Główny rezultat |
-|---|---|---|---|
-| S1 | 15.10 – 29.10.2026 | dane i poprawny eksperyment | kontrakt danych, input normalization, baseline, CI |
-| S2 | 29.10 – 12.11.2026 | reprodukowalny pipeline | `kedro run` od surowych danych do modelu i metryk |
-| S3 | 12.11 – 26.11.2026 | eksperymenty i artefakt | model produkcyjny jako pakiet ładowalny poza treningiem |
-| S4 | 26.11 – 17.12.2026 | usługa, stan, kontener | API z tokenem dostępu i persistence, w kontenerze |
-| S5 | 17.12.2026 – 07.01.2027 | system lokalny | API + UI + Postgres uruchamiane jedną komendą |
-| S6 | 07.01 – 21.01.2027 | platforma i obserwowalność | system w Cloud Run, sekret, logi, release v1.0 |
+| Sprint | Daty                    | Warstwa systemu             | Główny rezultat                                         |
+| ------ | ----------------------- | --------------------------- | ------------------------------------------------------- |
+| S1     | 15.10 – 29.10.2026      | dane i poprawny eksperyment | kontrakt danych, input normalization, baseline, CI      |
+| S2     | 29.10 – 12.11.2026      | reprodukowalny pipeline     | `kedro run` od surowych danych do modelu i metryk       |
+| S3     | 12.11 – 26.11.2026      | eksperymenty i artefakt     | model produkcyjny jako pakiet ładowalny poza treningiem |
+| S4     | 26.11 – 17.12.2026      | usługa, stan, kontener      | API z tokenem dostępu i persistence, w kontenerze       |
+| S5     | 17.12.2026 – 07.01.2027 | system lokalny              | API + UI + Postgres uruchamiane jedną komendą           |
+| S6     | 07.01 – 21.01.2027      | platforma i obserwowalność  | system w Cloud Run, sekret, logi, release v1.0          |
 
 Szczegóły każdego sprintu: `docs/sprints/SPRINT_N.md`. Release candidate Sprintu 6 jest
 14.01.2027, finał i demo 21.01.2027.
@@ -78,15 +88,15 @@ względem Definition of Done pokazuje `python scripts/check_dod.py --sprint 1`.
 
 Najważniejsze pliki Sprintu 1:
 
-| Plik | Kto edytuje | Po co |
-|---|---|---|
-| `project.yaml` | zespół | wybrany dataset, typy cech, parametry splitu |
-| `src/asi_project/data.py` | zespół (miejsca oznaczone TODO) | input normalization i training-only filtering |
-| `src/asi_project/model.py` | zespół (TODO) | sklearn Pipeline z model preprocessing |
-| `notebooks/01_eda.ipynb` | zespół | EDA i decyzje o danych |
-| `notebooks/02_baseline.ipynb` | zespół | baseline i `metrics.json` |
-| `docs/architecture.md` | zespół | diagram v0 systemu docelowego |
-| `src/asi_project/datasets.yaml` | prowadząca | kontrakt datasetów — nie edytujemy |
+| Plik                            | Kto edytuje                     | Po co                                         |
+| ------------------------------- | ------------------------------- | --------------------------------------------- |
+| `project.yaml`                  | zespół                          | wybrany dataset, typy cech, parametry splitu  |
+| `src/asi_project/data.py`       | zespół (miejsca oznaczone TODO) | input normalization i training-only filtering |
+| `src/asi_project/model.py`      | zespół (TODO)                   | sklearn Pipeline z model preprocessing        |
+| `notebooks/01_eda.ipynb`        | zespół                          | EDA i decyzje o danych                        |
+| `notebooks/02_baseline.ipynb`   | zespół                          | baseline i `metrics.json`                     |
+| `docs/architecture.md`          | zespół                          | diagram v0 systemu docelowego                 |
+| `src/asi_project/datasets.yaml` | prowadząca                      | kontrakt datasetów — nie edytujemy            |
 
 ## Gałęzie, Pull Requesty i review
 
@@ -157,27 +167,27 @@ implement before this sprint.”: opisują, co powstanie, w którym sprincie i z
 To nie są rozwiązania ani zadania do wykonania wcześniej. Kod Sprintu 1 nie korzysta z żadnego
 z tych elementów.
 
-| Element / katalog | Sprint | Rola |
-|---|---|---|
-| `src/asi_project/datasets.yaml` | S1 | kontrakt datasetów (prowadząca) |
-| `project.yaml` | S1 | decyzje zespołu: dataset, typy cech, split |
-| `src/asi_project/` (`config`, `data`, `model`, `metrics`, `download`) | S1 | kontrakt danych, trzy typy przetwarzania, baseline, metryki |
-| `notebooks/` | S1 | EDA i baseline |
-| `data/01_raw/` | S1 | pełne dane (poza gitem) i próbka CI |
-| `scripts/` | S1, rozszerzany w S3–S6 | dane, próbka CI, środowisko, DoD; później smoke modelu i smoke API |
-| `tests/` | S1, rozszerzany w S2 i S4 | testy kontraktów; później testy nodów (`tests/pipelines/`) i API (`tests/api/`) |
-| `.github/workflows/ci.yml` | S1 → S6 | CI rośnie razem z systemem |
-| `conf/` (`base`, `local`, `ci`) | S2 | konfiguracja Kedro |
-| `src/asi_project/pipelines/` | S2 → S3 | pipeline'y `data_processing` i `data_science` |
-| `data/02_intermediate/`, `data/06_models/`, `data/08_reporting/` | S2 → S3 | wyjścia pipeline'u (poza gitem) |
-| pakiet modelu (opis w `src/asi_project/README.md`) | S3 | katalog z modelem i `metadata.json` |
-| `docs/model_card.md` | S3 | Model Card |
-| `src/asi_project/api/` | S4 | usługa: kontrakt, ustawienia, persistence |
-| `docker/` | S4 → S5 | obrazy API i UI, docker compose |
-| `ui/` | S5 | interfejs Streamlit |
-| `deploy/` | S6 | Cloud Run, Secret Manager, release |
-| `docs/adr/` | S2 → S6 | ADR-1, ADR-2, ADR-3 |
-| `docs/sprints/`, `github_issues/` | S1–S6 | wymagania sprintów |
+| Element / katalog                                                     | Sprint                    | Rola                                                                            |
+| --------------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------- |
+| `src/asi_project/datasets.yaml`                                       | S1                        | kontrakt datasetów (prowadząca)                                                 |
+| `project.yaml`                                                        | S1                        | decyzje zespołu: dataset, typy cech, split                                      |
+| `src/asi_project/` (`config`, `data`, `model`, `metrics`, `download`) | S1                        | kontrakt danych, trzy typy przetwarzania, baseline, metryki                     |
+| `notebooks/`                                                          | S1                        | EDA i baseline                                                                  |
+| `data/01_raw/`                                                        | S1                        | pełne dane (poza gitem) i próbka CI                                             |
+| `scripts/`                                                            | S1, rozszerzany w S3–S6   | dane, próbka CI, środowisko, DoD; później smoke modelu i smoke API              |
+| `tests/`                                                              | S1, rozszerzany w S2 i S4 | testy kontraktów; później testy nodów (`tests/pipelines/`) i API (`tests/api/`) |
+| `.github/workflows/ci.yml`                                            | S1 → S6                   | CI rośnie razem z systemem                                                      |
+| `conf/` (`base`, `local`, `ci`)                                       | S2                        | konfiguracja Kedro                                                              |
+| `src/asi_project/pipelines/`                                          | S2 → S3                   | pipeline'y `data_processing` i `data_science`                                   |
+| `data/02_intermediate/`, `data/06_models/`, `data/08_reporting/`      | S2 → S3                   | wyjścia pipeline'u (poza gitem)                                                 |
+| pakiet modelu (opis w `src/asi_project/README.md`)                    | S3                        | katalog z modelem i `metadata.json`                                             |
+| `docs/model_card.md`                                                  | S3                        | Model Card                                                                      |
+| `src/asi_project/api/`                                                | S4                        | usługa: kontrakt, ustawienia, persistence                                       |
+| `docker/`                                                             | S4 → S5                   | obrazy API i UI, docker compose                                                 |
+| `ui/`                                                                 | S5                        | interfejs Streamlit                                                             |
+| `deploy/`                                                             | S6                        | Cloud Run, Secret Manager, release                                              |
+| `docs/adr/`                                                           | S2 → S6                   | ADR-1, ADR-2, ADR-3                                                             |
+| `docs/sprints/`, `github_issues/`                                     | S1–S6                     | wymagania sprintów                                                              |
 
 Ogólną architekturę warstw opisuje [`docs/architecture.md`](docs/architecture.md).
 Przypięte instalacje kolejnych sprintów: `requirements/preflight-s2.txt` (Kedro, pod koniec S1)
