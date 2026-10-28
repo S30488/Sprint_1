@@ -46,12 +46,37 @@ albo jako obraz w `docs/` z linkiem w tej sekcji. Usuńcie znaczniki TODO, gdy d
 gotowy — sprawdza to `python scripts/check_dod.py`.
 
 <!-- DIAGRAM-V0:START -->
+
 ```mermaid
-flowchart LR
-    data["TODO: źródło danych"] --> model["TODO: kolejne elementy systemu"]
+flowchart TD
+    subgraph S1["Sprint 1 - gotowe"]
+        A["UCI Iranian Churn<br/>download_data.py"] --> B["data/01_raw"]
+        K["Kontrakt danych<br/>datasets.yaml, project.yaml"]
+        B --> C["normalize_input()"]
+        C --> D["filter_training_rows()"]
+        D --> E["split train/test"]
+        E --> F["sklearn Pipeline<br/>preprocessing + LogisticRegression"]
+        F --> G["metrics.json"]
+        K -.-> C
+        K -.-> D
+    end
+    subgraph NEXT["Planowane"]
+        H["Kedro (S2)"] --> I["Artefakt modelu (S3)"]
+        U(["Użytkownik"]) --> UI["UI (S5)"]
+        UI -->|dane klienta| API["API (S4)"]
+        API --> C2["normalize_input()"]
+        C2 --> I
+        I -->|prawdopodobieństwo churnu| API
+        API --> UI
+        API --> DB[("Baza predykcji (S4-S6)")]
+        CR["Cloud Run (S6)"] -.-> API
+        CR -.-> UI
+    end
+    F -.-> H
 ```
 
-TODO: krótki opis diagramu (3–5 zdań).
+Dane pobieramy skryptem z UCI i trzymamy poza Gitem. Przy treningu przechodzą przez normalize_input(), filter_training_rows() (tylko trening) i split, a preprocessing jest w sklearn Pipeline razem z modelem. Po Sprincie 1 działa tylko część treningowa i powstaje metrics.json. Docelowo użytkownik wysyła dane klienta przez UI do API, które używa tej samej normalize_input(), zwraca prawdopodobieństwo churnu i zapisuje predykcję w bazie. API i UI będą wdrożone w Cloud Run.
+
 <!-- DIAGRAM-V0:END -->
 
 ## Historia zmian architektury
