@@ -1,4 +1,23 @@
-# Sprint 2 — parametry pipeline'u.
-# TODO (zespół): dodaj test_size, random_state i inne parametry zgodne
-# z project.yaml oraz kontraktem wybranego datasetu.
-{}
+# Parametry pipeline'u data_science. Muszą zgadzać się z project.yaml
+# (pilnuje tego test w tests/pipelines/test_data_science.py).
+split:
+  test_size: 0.2
+  random_state: 42
+
+features:
+  numeric:
+    - Call Failure
+    - Subscription Length
+    - Charge Amount
+    - Seconds of Use
+    - Frequency of use
+    - Frequency of SMS
+    - Distinct Called Numbers
+    - Age Group
+    - Age
+  categorical:
+    - Complains
+    - Tariff Plan
+    - Status
+
+data_mode: full

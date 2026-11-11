@@ -1,0 +1,11 @@
+# Osobne pliki, żeby run na próbce nie nadpisał modelu i metryk z pełnych danych.
+model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/model_ci.pkl
+
+metrics:
+  type: json.JSONDataset
+  filepath: data/08_reporting/metrics_ci.json
+  save_args:
+    indent: 2
+    ensure_ascii: false
