@@ -10,5 +10,11 @@ from kedro.pipeline import Pipeline
 
 
 def register_pipelines() -> dict[str, Pipeline]:
-    """Wykryj pipeline'y z ``src/asi_project/pipelines/``."""
-    return find_pipelines()
+    pipelines = find_pipelines()
+
+    data_processing = pipelines["data_processing"]
+    data_science = pipelines["data_science"]
+
+    pipelines["__default__"] = data_processing + data_science
+
+    return pipelines

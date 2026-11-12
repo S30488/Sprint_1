@@ -98,6 +98,24 @@ Najważniejsze pliki Sprintu 1:
 | `docs/architecture.md`          | zespół                          | diagram v0 systemu docelowego                 |
 | `src/asi_project/datasets.yaml` | prowadząca                      | kontrakt datasetów — nie edytujemy            |
 
+## Start Sprint 2
+
+Wykorzystujemy Kedro do przygotowania danych, trenowania oraz sprawdzenia
+### Instalacja:
+```bash
+conda activate asi-ml
+python -m pip install -r requirements/preflight-s2.txt -c constraints.txt
+python -m pip install --no-deps -e .
+```
+### Uruchomienie:
+```bash
+kedro run                 # pełne dane
+kedro run --env ci        # próbka CI
+kedro registry list       # lista pipelineow
+```
+
+default łączy data_processing z data_science
+Wynik to zapisany model oraz metryki eksperymentu
 ## Gałęzie, Pull Requesty i review
 
 - Gałąź `main` jest chroniona. Każda zmiana trafia przez gałąź i Pull Request.
