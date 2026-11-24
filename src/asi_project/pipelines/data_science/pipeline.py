@@ -35,6 +35,7 @@ def create_pipeline(**kwargs) -> Pipeline:
                     "params:features",
                     "params:split",
                     "params:data_mode",
+                    "X_train",
                 ],
                 outputs="metrics",
                 name="evaluate_models_node",
