@@ -1,3 +1,6 @@
+import json
+import shutil
+import time
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -170,3 +173,98 @@ def evaluate_models(
         record["system_benchmarks"] = bench_summary
 
     return record
+
+
+def _data_fingerprint() -> str:
+    config = load_project_config()
+    contract = get_contract(config)
+    path = config.root / "data" / "01_raw" / contract.dataset_id / "fingerprint.json"
+    if not path.exists():
+        return "unknown"
+    return json.loads(path.read_text(encoding="utf-8")).get("sha256", "unknown")
+
+
+def train_autogluon(
+    X_train: pd.DataFrame,
+    y_train: pd.Series,
+    X_test: pd.DataFrame,
+    y_test: pd.Series,
+    autogluon: dict[str, Any],
+) -> dict[str, Any]:
+    if not autogluon.get("enabled", False):
+        return {"enabled": False}
+
+    # import tylko gdy AG jest włączony (w CI nie jest)
+    from autogluon.tabular import TabularPredictor
+
+    contract = get_contract(load_project_config())
+    train_df = X_train.assign(**{contract.target: y_train})
+    git_sha = get_git_sha()
+    data_fp = _data_fingerprint()
+
+    results: dict[str, Any] = {}
+    for name, cfg in autogluon["configs"].items():
+        pkg_dir = Path(autogluon["output_dir"]) / name
+        train_dir = pkg_dir.parent / f"{name}_training"
+        shutil.rmtree(pkg_dir, ignore_errors=True)
+        shutil.rmtree(train_dir, ignore_errors=True)
+
+        start = time.perf_counter()
+        predictor = TabularPredictor(
+            label=contract.target,
+            path=str(train_dir),
+            eval_metric=autogluon["eval_metric"],
+            problem_type="binary",
+            verbosity=0,
+        ).fit(
+            train_df,
+            presets=cfg["presets"],
+            time_limit=cfg["time_limit"],
+            hyperparameters=cfg.get("hyperparameters"),
+        )
+        fit_time_s = round(time.perf_counter() - start, 1)
+
+        # modele do pamięci, żeby pakiet nie zależał od katalogu treningowego
+        predictor.persist("all")
+        scores = compute_metrics(y_test, predictor.predict(X_test))
+
+        params = {
+            "model_name": name,
+            "model_type": "AutoGluonTabularPredictor",
+            "presets": cfg["presets"],
+            "time_limit": cfg["time_limit"],
+            "eval_metric": autogluon["eval_metric"],
+            "best_model": predictor.model_best,
+            "n_models": len(predictor.model_names()),
+            "fit_time_s": fit_time_s,
+            "n_train": len(y_train),
+            "n_test": len(y_test),
+        }
+        save_model_package(
+            predictor,
+            pkg_dir,
+            model_name=name,
+            model_type="AutoGluonTabularPredictor",
+            allowed_features=list(X_train.columns),
+            target_column=contract.target,
+            positive_class=contract.positive_class,
+            metrics=scores,
+            data_fingerprint=data_fp,
+            extra_metadata={"autogluon": params},
+        )
+        shutil.rmtree(train_dir, ignore_errors=True)
+        sys_stats = benchmark_model_package(pkg_dir, X_test)
+
+        log_experiment_run(
+            run_name=f"{name}-s3",
+            job_type="autogluon",
+            params=params,
+            metrics=scores,
+            system_metrics=sys_stats,
+            git_sha=git_sha,
+            data_fingerprint=data_fp,
+            tags=["sprint-3", "autogluon", name],
+        )
+        results[name] = {**params, **scores, **sys_stats}
+
+    return results
