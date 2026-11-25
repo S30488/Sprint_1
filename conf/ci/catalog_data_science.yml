@@ -9,3 +9,10 @@ metrics:
   save_args:
     indent: 2
     ensure_ascii: false
+
+autogluon_results:
+  type: json.JSONDataset
+  filepath: data/08_reporting/autogluon_results_ci.json
+  save_args:
+    indent: 2
+    ensure_ascii: false

@@ -86,5 +86,6 @@ def test_pipeline_inputs_and_outputs():
         "params:features",
         "params:split",
         "params:data_mode",
+        "params:autogluon",
     }
-    assert {"model", "metrics"} <= ds_pipeline.all_outputs()
+    assert {"model", "metrics", "autogluon_results"} <= ds_pipeline.all_outputs()

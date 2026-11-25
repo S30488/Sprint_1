@@ -21,3 +21,16 @@ features:
     - Status
 
 data_mode: full
+
+# S3: eksperymenty AutoGluon (ten sam split co reszta modeli)
+autogluon:
+  enabled: true
+  eval_metric: f1
+  output_dir: data/06_models
+  configs:
+    autogluon_medium:
+      presets: medium_quality
+      time_limit: 60
+    autogluon_best:
+      presets: best_quality
+      time_limit: 180

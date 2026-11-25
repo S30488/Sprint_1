@@ -1,1 +1,5 @@
 data_mode: sample
+
+# w CI nie trenujemy AutoGluona
+autogluon:
+  enabled: false
